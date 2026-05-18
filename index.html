@@ -138,7 +138,6 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 </div>
 <div class="loading" id="load"><div class="spin"></div><div class="ltxt" id="ltxt">Tankstellen araniyor...</div></div>
 <div class="ebox" id="err"></div>
-<div class="debug" id="dbg"></div>
 <div id="rarea" style="display:none">
   <div class="rmeta">
     <div class="rcount"><strong id="cnt">0</strong> <span id="clbl">Tankstelle</span></div>
@@ -262,13 +261,6 @@ function doSearchWithCoords(lat,lng){
       return r.json();
     })
     .then(function(td){
-      // DEBUG: log first station keys to find price field
-      if(td.stations&&td.stations.length>0){
-        var s=td.stations[0];
-        var keys=Object.keys(s);
-        document.getElementById('dbg').textContent='DEBUG ilk istasyon anahtarlari: '+keys.join(', ')+' | degerler: diesel='+s.diesel+' e5='+s.e5+' e10='+s.e10+' price='+s.price;
-        document.getElementById('dbg').classList.add('on');
-      }
       if(!td.ok)throw new Error(td.message||'API hatasi');
       sts=td.stations||[];
       setLoad(false);
