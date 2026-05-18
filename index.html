@@ -252,31 +252,44 @@ function doSearch(){
 
 function doSearchWithCoords(lat,lng){
   var rad=document.getElementById('rad').value;
-  setLoad(true,'Tankstellen aranıyor...');
+  setLoad(true,'Tum yakit fiyatlari yukleniyor...');
   clearUI();
-  var url='https://creativecommons.tankerkoenig.de/json/list.php?lat='+lat+'&lng='+lng+'&rad='+rad+'&sort=price&type='+fuel+'&apikey='+KEY;
-  fetch(url)
-    .then(function(r){
-      if(!r.ok)throw new Error('HTTP '+r.status);
-      return r.json();
-    })
-    .then(function(td){
-      if(!td.ok)throw new Error(td.message||'API hatasi');
-      sts=td.stations||[];
-      setLoad(false);
-      if(!sts.length){document.getElementById('emp').classList.add('on');return;}
-      document.getElementById('rarea').style.display='block';
-      document.getElementById('lupd').textContent='Guncelleme: '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
-      render();
-      if(mapOn)buildMap();
-    })
-    .catch(function(e){setLoad(false);showErr(e.message)});
+  // Fetch all 3 fuel types at once
+  var base='https://creativecommons.tankerkoenig.de/json/list.php?lat='+lat+'&lng='+lng+'&rad='+rad+'&sort=price&apikey='+KEY;
+  Promise.all([
+    fetch(base+'&type=diesel').then(function(r){return r.json()}),
+    fetch(base+'&type=e5').then(function(r){return r.json()}),
+    fetch(base+'&type=e10').then(function(r){return r.json()})
+  ]).then(function(results){
+    var dData=results[0], eData=results[1], e10Data=results[2];
+    if(!dData.ok&&!eData.ok&&!e10Data.ok)throw new Error('API hatasi');
+    // Build merged station map by id
+    var map={};
+    (dData.stations||[]).forEach(function(s){
+      map[s.id]=Object.assign({},s);
+      map[s.id].diesel=s.price;
+    });
+    (eData.stations||[]).forEach(function(s){
+      if(!map[s.id])map[s.id]=Object.assign({},s);
+      map[s.id].e5=s.price;
+      if(!map[s.id].diesel)map[s.id].diesel=null;
+    });
+    (e10Data.stations||[]).forEach(function(s){
+      if(!map[s.id])map[s.id]=Object.assign({},s);
+      map[s.id].e10=s.price;
+    });
+    sts=Object.values(map);
+    setLoad(false);
+    if(!sts.length){document.getElementById('emp').classList.add('on');return;}
+    document.getElementById('rarea').style.display='block';
+    document.getElementById('lupd').textContent='Guncelleme: '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+    render();
+    if(mapOn)buildMap();
+  }).catch(function(e){setLoad(false);showErr(e.message)});
 }
 
 function gp(s){
-  var v=s.price;
-  if(v&&v>0)return v;
-  v=s[fuel];
+  var v=s[fuel];
   if(v&&v>0)return v;
   return null;
 }
@@ -313,6 +326,9 @@ function render(){
     if(isCheap)cheapDone=true;
     var diff=(price&&minP&&price>minP)?'+'+((price-minP)*100).toFixed(1)+'ct':null;
     var others='';
+    if(fuel!=='diesel'&&st.diesel&&st.diesel>0)others+='<div class="opi">Diesel: <b>'+st.diesel.toFixed(3)+' EUR</b></div>';
+    if(fuel!=='e5'&&st.e5&&st.e5>0)others+='<div class="opi">E5: <b>'+st.e5.toFixed(3)+' EUR</b></div>';
+    if(fuel!=='e10'&&st.e10&&st.e10>0)others+='<div class="opi">E10: <b>'+st.e10.toFixed(3)+' EUR</b></div>';
     var card=document.createElement('div');
     card.className='scard'+(isCheap?' cheap':'')+(!st.isOpen?' closed':'');
     card.style.animationDelay=Math.min(i*0.035,0.4)+'s';
