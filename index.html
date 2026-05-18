@@ -282,13 +282,10 @@ function doSearchWithCoords(lat,lng){
 }
 
 function gp(s){
-  // Try multiple possible field names
-  var v=s[fuel];
+  var v=s.price;
   if(v&&v>0)return v;
-  // fallback: diesel/e5/e10
-  if(fuel==='diesel'){v=s.diesel||s.Diesel||s['diesel'];return(v&&v>0)?v:null;}
-  if(fuel==='e5'){v=s.e5||s.E5||s['e5'];return(v&&v>0)?v:null;}
-  if(fuel==='e10'){v=s.e10||s.E10||s['e10'];return(v&&v>0)?v:null;}
+  v=s[fuel];
+  if(v&&v>0)return v;
   return null;
 }
 
@@ -324,9 +321,6 @@ function render(){
     if(isCheap)cheapDone=true;
     var diff=(price&&minP&&price>minP)?'+'+((price-minP)*100).toFixed(1)+'ct':null;
     var others='';
-    if(fuel!=='diesel'){var dv=st.diesel;if(dv&&dv>0)others+='<div class="opi">Diesel: <b>'+dv.toFixed(3)+' EUR</b></div>';}
-    if(fuel!=='e5'){var ev=st.e5;if(ev&&ev>0)others+='<div class="opi">E5: <b>'+ev.toFixed(3)+' EUR</b></div>';}
-    if(fuel!=='e10'){var ev2=st.e10;if(ev2&&ev2>0)others+='<div class="opi">E10: <b>'+ev2.toFixed(3)+' EUR</b></div>';}
     var card=document.createElement('div');
     card.className='scard'+(isCheap?' cheap':'')+(!st.isOpen?' closed':'');
     card.style.animationDelay=Math.min(i*0.035,0.4)+'s';
