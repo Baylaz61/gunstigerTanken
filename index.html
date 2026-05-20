@@ -4,103 +4,144 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TankPreis</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0a0c0f;--surface:#111418;--card:#161b22;--border:#21262d;--accent:#f0a500;--accent2:#e05c00;--green:#3fb950;--red:#f85149;--text:#e6edf3;--muted:#7d8590;--diesel:#3b82f6;--super:#22c55e;--e10:#a855f7}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(240,165,0,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(240,165,0,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
-.wrapper{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:28px 16px 80px}
-header{display:flex;align-items:center;gap:14px;margin-bottom:28px}
-.logo{width:46px;height:46px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-header h1{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;letter-spacing:-0.5px}
-header h1 span{color:var(--accent)}
-header p{font-size:12px;color:var(--muted);font-weight:300}
-.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:20px}
-.fuel-tabs{display:flex;gap:8px;margin-bottom:16px}
-.ftab{flex:1;padding:10px 6px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:'DM Mono',monospace;font-size:12px;cursor:pointer;transition:all .2s;text-align:center;text-transform:uppercase;letter-spacing:.5px}
-.ftab.active[data-fuel="diesel"]{background:rgba(59,130,246,.15);border-color:var(--diesel);color:var(--diesel)}
-.ftab.active[data-fuel="e5"]{background:rgba(34,197,94,.15);border-color:var(--super);color:var(--super)}
-.ftab.active[data-fuel="e10"]{background:rgba(168,85,247,.15);border-color:var(--e10);color:var(--e10)}
-.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-.field{display:flex;flex-direction:column;gap:5px;flex:1;min-width:130px}
-label{font-size:10px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-family:'DM Mono',monospace}
-input,select{background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:10px 12px;outline:none;width:100%;appearance:none;-webkit-appearance:none;transition:border-color .2s,box-shadow .2s}
-input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(240,165,0,.12)}
-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237d8590' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer}
-.city-row{display:flex;gap:8px;align-items:flex-end}
-.city-row .field{flex:1}
-.gps-btn{padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--muted);cursor:pointer;transition:all .2s;font-size:18px;white-space:nowrap;flex-shrink:0;height:42px;display:flex;align-items:center;justify-content:center}
-.gps-btn:hover{border-color:var(--accent);color:var(--accent)}
+body{background:linear-gradient(160deg,#1e4fd8 0%,#1230a0 40%,#0a1a5c 100%);color:#fff;font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+.wrapper{max-width:960px;margin:0 auto;padding:20px 16px 80px;position:relative;z-index:1}
+
+/* Header */
+header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.logo{width:44px;height:44px;background:linear-gradient(135deg,#ff8c00,#ff4500);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 4px 16px rgba(255,100,0,.4)}
+header h1{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:#fff;letter-spacing:-0.5px}
+header h1 span{color:#ff8c00}
+header p{font-size:11px;color:rgba(255,255,255,.55);font-weight:300}
+
+/* Panel */
+.panel{background:rgba(255,255,255,.97);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 8px 32px rgba(0,0,0,.25)}
+.fuel-tabs{display:flex;gap:6px;margin-bottom:12px}
+.ftab{flex:1;padding:9px 4px;border-radius:10px;border:2px solid #dde6f5;background:#f0f4fc;color:#7a90b8;font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;transition:all .2s;text-align:center;text-transform:uppercase;letter-spacing:.4px;font-weight:600}
+.ftab.active[data-fuel="diesel"]{background:linear-gradient(135deg,#ff8c00,#ff4500);border-color:transparent;color:#fff;box-shadow:0 3px 12px rgba(255,100,0,.4)}
+.ftab.active[data-fuel="e5"]{background:linear-gradient(135deg,#22c55e,#15803d);border-color:transparent;color:#fff;box-shadow:0 3px 12px rgba(34,197,94,.35)}
+.ftab.active[data-fuel="e10"]{background:linear-gradient(135deg,#a855f7,#7c3aed);border-color:transparent;color:#fff;box-shadow:0 3px 12px rgba(168,85,247,.35)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px}
+label{font-size:10px;font-weight:600;color:#8a9fc0;text-transform:uppercase;letter-spacing:.8px;font-family:'DM Mono',monospace}
+input,select{background:#f0f4fc;border:2px solid #dde6f5;border-radius:9px;color:#1a2a4a;font-family:'DM Sans',sans-serif;font-size:14px;padding:9px 11px;outline:none;width:100%;appearance:none;-webkit-appearance:none;transition:border-color .2s;font-weight:500}
+input:focus,select:focus{border-color:#ff8c00;box-shadow:0 0 0 3px rgba(255,140,0,.12)}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a9fc0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer}
+.city-row{display:flex;gap:6px}
+.gps-btn{padding:0 12px;background:#f0f4fc;border:2px solid #dde6f5;border-radius:9px;color:#8a9fc0;cursor:pointer;transition:all .2s;font-size:17px;height:43px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.gps-btn:hover{border-color:#ff8c00;color:#ff8c00}
 .gps-btn.loading{animation:pulse 1s ease infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.sbtn{width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:10px;color:#000;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s;display:flex;align-items:center;justify-content:center;gap:8px}
-.sbtn:hover{opacity:.9}.sbtn:disabled{opacity:.5;cursor:not-allowed}
-.cbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-.clabel{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.8px}
-.chip{padding:6px 13px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;transition:all .2s;white-space:nowrap;user-select:none}
-.chip.active{border-color:var(--accent);color:var(--accent);background:rgba(240,165,0,.08)}
-.chip.copen.active{border-color:var(--green);color:var(--green);background:rgba(63,185,80,.08)}
-.chip.cmap.active{border-color:#60a5fa;color:#60a5fa;background:rgba(96,165,250,.08)}
-.rmeta{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
-.rcount{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)}
-.rcount strong{color:var(--accent);font-size:15px}
-.lupd{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.sbtn{width:100%;padding:12px;background:linear-gradient(135deg,#ff8c00,#ff4500);border:none;border-radius:10px;color:#fff;font-family:'Syne',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:opacity .2s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 5px 18px rgba(255,100,0,.4)}
+.sbtn:hover{opacity:.92}.sbtn:disabled{opacity:.5;cursor:not-allowed}
+
+/* View toggle */
+.view-toggle{display:flex;gap:8px;margin-bottom:12px;align-items:center}
+.vtbtn{flex:1;padding:9px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);font-family:'DM Mono',monospace;font-size:12px;cursor:pointer;transition:all .2s;text-align:center;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px}
+.vtbtn.active{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4);color:#fff}
+.lupd{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,.4);margin-left:auto}
+
+/* Controls */
+.cbar{display:flex;align-items:center;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.clabel{font-size:10px;color:rgba(255,255,255,.45);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.8px}
+.chip{padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:rgba(255,255,255,.55);font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;transition:all .2s;white-space:nowrap;user-select:none;font-weight:500}
+.chip:hover{border-color:rgba(255,255,255,.35);color:#fff}
+.chip.active{border-color:#ff8c00;color:#ff8c00;background:rgba(255,140,0,.14)}
+.chip.copen.active{border-color:#22c55e;color:#22c55e;background:rgba(34,197,94,.1)}
+.rcount{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,.45);margin-left:auto}
+.rcount strong{color:#ff8c00}
+
+/* MAP VIEW */
+#map-view{display:block;position:relative}
+#map{width:100%;height:calc(100vh - 340px);min-height:320px;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.35)}
+
+/* Popup custom */
+.lpop{font-family:'DM Sans',sans-serif;font-size:13px;min-width:160px}
+.lpop-brand{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#1a2a4a;margin-bottom:4px}
+.lpop-price{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin:4px 0}
+.lpop-price.diesel-c{color:#ff6a00}
+.lpop-price.e5-c{color:#16a34a}
+.lpop-price.e10-c{color:#7c3aed}
+.lpop-adr{font-size:11px;color:#6b7fa3;margin-bottom:6px}
+.lpop-meta{display:flex;gap:8px;flex-wrap:wrap}
+.lpop-tag{font-size:10px;font-family:'DM Mono',monospace;padding:2px 8px;border-radius:20px;font-weight:600}
+.lpop-open{background:rgba(34,197,94,.12);color:#16a34a;border:1px solid rgba(34,197,94,.3)}
+.lpop-closed{background:rgba(239,68,68,.1);color:#dc2626;border:1px solid rgba(239,68,68,.25)}
+.lpop-dist{background:#f0f4fc;color:#6b7fa3;border:1px solid #dde6f5}
+.lpop-others{margin-top:6px;padding-top:6px;border-top:1px solid #e8eef8;font-size:11px;color:#8a9fc0;font-family:'DM Mono',monospace}
+.lpop-others b{color:#1a2a4a}
+
+/* LIST VIEW */
+#list-view{display:none}
 .rlist{display:flex;flex-direction:column;gap:8px}
-.scard{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;transition:border-color .2s,transform .15s;animation:fu .3s ease both}
-.scard:hover{border-color:#2d333b;transform:translateY(-1px)}
-.scard.cheap{border-color:var(--accent);background:linear-gradient(135deg,rgba(240,165,0,.06),var(--card))}
+.scard{background:rgba(255,255,255,.97);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;transition:transform .15s,box-shadow .15s;animation:fu .25s ease both;box-shadow:0 3px 14px rgba(0,0,0,.15);cursor:pointer}
+.scard:hover{transform:translateY(-2px);box-shadow:0 7px 22px rgba(0,0,0,.2)}
+.scard.cheap{background:linear-gradient(135deg,rgba(255,140,0,.07),rgba(255,255,255,.97));border:2px solid rgba(255,140,0,.35)}
 .scard.closed{opacity:.5}
 @keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.stop{display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap}
-.sbrand{font-family:'Syne',sans-serif;font-size:16px;font-weight:700}
+.stop{display:flex;align-items:center;gap:7px;margin-bottom:4px;flex-wrap:wrap}
+.sbrand{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#1a2a4a}
 .bdg{font-size:9px;font-weight:700;font-family:'DM Mono',monospace;padding:2px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:.8px;white-space:nowrap}
-.bchp{background:var(--accent);color:#000}
-.bopen{background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.25)}
-.bclosed{background:rgba(248,81,73,.12);color:var(--red);border:1px solid rgba(248,81,73,.25)}
-.sadr{font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:300;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.smeta{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.mitem{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace}
-.opr{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
-.opi{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
-.opi b{color:var(--text);font-weight:500}
-.pblock{text-align:right;flex-shrink:0;min-width:90px}
-.pmain{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;line-height:1;letter-spacing:-1px}
-.psup{font-size:16px;vertical-align:super;line-height:0;font-weight:700}
-.punit{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:3px;text-transform:uppercase}
-.pdiff{font-size:10px;font-family:'DM Mono',monospace;margin-top:3px;font-weight:500}
-.hi{color:var(--red)}.lo{color:var(--green)}
-#mapwrap{margin-top:20px;border-radius:16px;overflow:hidden;border:1px solid var(--border);display:none;height:360px}
-#mapwrap.on{display:block}
-#map{width:100%;height:100%}
-.loading{display:none;flex-direction:column;align-items:center;padding:50px 20px;gap:14px}
+.bchp{background:linear-gradient(135deg,#ff8c00,#ff4500);color:#fff;box-shadow:0 2px 6px rgba(255,100,0,.3)}
+.bopen{background:rgba(34,197,94,.12);color:#16a34a;border:1px solid rgba(34,197,94,.3)}
+.bclosed{background:rgba(239,68,68,.1);color:#dc2626;border:1px solid rgba(239,68,68,.25)}
+.sadr{font-size:11px;color:#6b7fa3;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.smeta{display:flex;gap:12px;flex-wrap:wrap}
+.mitem{font-size:11px;color:#8a9fc0;font-family:'DM Mono',monospace;font-weight:500}
+.opr{display:flex;gap:10px;flex-wrap:wrap;margin-top:7px;padding-top:7px;border-top:1px solid #e8eef8}
+.opi{font-family:'DM Mono',monospace;font-size:11px;color:#8a9fc0}
+.opi b{color:#1a2a4a;font-weight:600}
+.pblock{text-align:right;flex-shrink:0;min-width:85px}
+.pmain{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;line-height:1;letter-spacing:-1px}
+.pmain.diesel-c{color:#ff6a00}.pmain.e5-c{color:#16a34a}.pmain.e10-c{color:#7c3aed}
+.psup{font-size:15px;vertical-align:super;line-height:0;font-weight:700}
+.punit{font-size:10px;color:#8a9fc0;font-family:'DM Mono',monospace;margin-top:2px;text-transform:uppercase;font-weight:500}
+.pdiff{font-size:10px;font-family:'DM Mono',monospace;margin-top:2px;font-weight:600}
+.hi{color:#dc2626}.lo{color:#16a34a}
+
+/* Loading */
+.loading{display:none;flex-direction:column;align-items:center;padding:40px 20px;gap:12px}
 .loading.on{display:flex}
-.spin{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite}
+.spin{width:34px;height:34px;border:3px solid rgba(255,255,255,.12);border-top-color:#ff8c00;border-radius:50%;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
-.ltxt{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)}
-.ebox{display:none;background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.25);border-radius:12px;padding:14px 18px;font-size:13px;color:var(--red);margin-top:12px;line-height:1.6}
+.ltxt{font-family:'DM Mono',monospace;font-size:12px;color:rgba(255,255,255,.45)}
+.ebox{display:none;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:12px;padding:12px 16px;font-size:13px;color:#fca5a5;margin-top:10px;line-height:1.6}
 .ebox.on{display:block}
-.empty{display:none;text-align:center;padding:50px 20px;color:var(--muted)}
+.empty{display:none;text-align:center;padding:40px 20px;color:rgba(255,255,255,.45)}
 .empty.on{display:block}
-.debug{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-top:8px;display:none;word-break:break-all}
-.debug.on{display:block}
-@media(max-width:500px){.scard{grid-template-columns:1fr}.pblock{text-align:left;display:flex;align-items:center;gap:12px}.row{flex-direction:column}}
+
+/* Marker styles handled inline */
+.leaflet-popup-content-wrapper{border-radius:14px!important;box-shadow:0 8px 24px rgba(0,0,0,.18)!important;padding:0!important;overflow:hidden}
+.leaflet-popup-content{margin:0!important;padding:14px 16px!important}
+.leaflet-popup-tip-container{margin-top:-1px}
+
+@media(max-width:500px){
+  .scard{grid-template-columns:1fr}
+  .pblock{text-align:left;display:flex;align-items:center;gap:10px}
+  .row{flex-direction:column}
+  #map{height:calc(100vh - 380px);min-height:280px}
+}
 </style>
 </head>
 <body>
 <div class="wrapper">
+
 <header>
   <div class="logo">&#9981;</div>
   <div>
     <h1>Tank<span>Preis</span></h1>
-    <p>Anlik yakit fiyatlari - Almanya</p>
+    <p>Anlik yakit fiyatlari &middot; Almanya</p>
   </div>
 </header>
+
 <div class="panel">
   <div class="fuel-tabs">
-    <button class="ftab active" data-fuel="diesel">Diesel</button>
+    <button class="ftab active" data-fuel="diesel">&#9981; Diesel</button>
     <button class="ftab" data-fuel="e5">Super E5</button>
     <button class="ftab" data-fuel="e10">Super E10</button>
   </div>
@@ -108,11 +149,11 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <div class="field">
       <label>Sehir / Postleitzahl</label>
       <div class="city-row">
-        <input type="text" id="city" placeholder="z.B. Hannover, 30159" value="Hannover">
-        <button class="gps-btn" id="gpsbtn" onclick="useGPS()" title="GPS konumunu kullan">&#128205;</button>
+        <input type="text" id="city" placeholder="z.B. Hannover, 30159" value="Hannover" style="flex:1">
+        <button class="gps-btn" id="gpsbtn" onclick="useGPS()" title="GPS">&#128205;</button>
       </div>
     </div>
-    <div class="field" style="max-width:140px;min-width:110px">
+    <div class="field" style="max-width:130px;min-width:100px">
       <label>Radius</label>
       <select id="rad">
         <option value="2">2 km</option>
@@ -122,7 +163,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
         <option value="25">25 km</option>
       </select>
     </div>
-    <div class="field" style="max-width:120px;min-width:100px">
+    <div class="field" style="max-width:110px;min-width:90px">
       <label>Limit</label>
       <select id="lim">
         <option value="10">10</option>
@@ -133,78 +174,92 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     </div>
   </div>
   <button class="sbtn" id="sbtn" onclick="doSearch()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     Ara / Suchen
   </button>
 </div>
-<div class="loading" id="load"><div class="spin"></div><div class="ltxt" id="ltxt">Tankstellen araniyor...</div></div>
+
+<div class="loading" id="load"><div class="spin"></div><div class="ltxt" id="ltxt">Araniyor...</div></div>
 <div class="ebox" id="err"></div>
-<div id="rarea" style="display:none">
-  <div class="rmeta">
-    <div class="rcount"><strong id="cnt">0</strong> <span id="clbl">Tankstelle</span></div>
+<div class="empty" id="emp"><div style="font-size:36px;margin-bottom:10px">&#128269;</div><p>Bu bolgede Tankstelle bulunamadi.</p></div>
+
+<div id="main-area" style="display:none">
+  <!-- View toggle + meta -->
+  <div class="view-toggle">
+    <button class="vtbtn active" id="vmap" onclick="switchView('map')">&#128506; Harita</button>
+    <button class="vtbtn" id="vlist" onclick="switchView('list')">&#9776; Liste</button>
     <div class="lupd" id="lupd"></div>
   </div>
+
+  <!-- Controls -->
   <div class="cbar">
     <span class="clabel">Sirala:</span>
-    <button class="chip active" data-sort="smart" onclick="srt('smart',this)">Akilli</button>
+    <button class="chip active" data-sort="smart" onclick="srt('smart',this)">&#127942; Akilli</button>
     <button class="chip" data-sort="price" onclick="srt('price',this)">Fiyat</button>
     <button class="chip" data-sort="dist" onclick="srt('dist',this)">Mesafe</button>
-    <span style="color:var(--border);padding:0 2px">|</span>
-    <button class="chip copen active" id="obtn" onclick="togOpen()">Sadece Acik</button>
-    <span style="color:var(--border);padding:0 2px">|</span>
-    <button class="chip cmap" id="mbtn" onclick="togMap()">Harita</button>
+    <span style="color:rgba(255,255,255,.15);padding:0 2px">|</span>
+    <button class="chip copen active" id="obtn" onclick="togOpen()">&#10003; Sadece Acik</button>
+    <div class="rcount"><strong id="cnt">0</strong> <span id="clbl">istasyon</span></div>
   </div>
-  <div class="rlist" id="rlist"></div>
+
+  <!-- MAP VIEW -->
+  <div id="map-view">
+    <div id="map"></div>
+  </div>
+
+  <!-- LIST VIEW -->
+  <div id="list-view">
+    <div class="rlist" id="rlist"></div>
+  </div>
 </div>
-<div class="empty" id="emp"><div style="font-size:36px;margin-bottom:10px">&#128269;</div><p>Bu bolgede Tankstelle bulunamadi.</p></div>
-<div id="mapwrap"><div id="map"></div></div>
-</div>
+
+</div><!-- /wrapper -->
+
 <script>
 var KEY='6f025281-2355-4747-b9ad-b78abbe65990';
-var fuel='diesel',sortM='smart',onlyOpen=true,sts=[],mapInst=null,markers=[],mapOn=false;
+var fuel='diesel',sortM='smart',onlyOpen=true,sts=[],mapInst=null,markers=[],curView='map';
 var gpsLat=null,gpsLng=null;
 
 document.querySelectorAll('.ftab').forEach(function(b){
   b.addEventListener('click',function(){
     document.querySelectorAll('.ftab').forEach(function(x){x.classList.remove('active')});
     b.classList.add('active');fuel=b.dataset.fuel;
-    if(sts.length)render();
+    if(sts.length){renderList();rebuildMap();}
   });
 });
 document.getElementById('city').addEventListener('keydown',function(e){if(e.key==='Enter')doSearch()});
 
+function switchView(v){
+  curView=v;
+  document.getElementById('map-view').style.display=v==='map'?'block':'none';
+  document.getElementById('list-view').style.display=v==='list'?'block':'none';
+  document.getElementById('vmap').classList.toggle('active',v==='map');
+  document.getElementById('vlist').classList.toggle('active',v==='list');
+  if(v==='map'&&mapInst)setTimeout(function(){mapInst.invalidateSize();},100);
+}
+
 function useGPS(){
   var btn=document.getElementById('gpsbtn');
-  if(!navigator.geolocation){alert('Tarayiciniz GPS desteklemiyor.');return;}
-  btn.classList.add('loading');
-  btn.textContent='...';
+  if(!navigator.geolocation){alert('GPS desteklenmiyor.');return;}
+  btn.classList.add('loading');btn.textContent='...';
   navigator.geolocation.getCurrentPosition(
     function(pos){
-      gpsLat=pos.coords.latitude;
-      gpsLng=pos.coords.longitude;
-      btn.classList.remove('loading');
-      btn.textContent='✓';
-      btn.style.borderColor='var(--green)';
-      btn.style.color='var(--green)';
-      // reverse geocode to show city name
+      gpsLat=pos.coords.latitude;gpsLng=pos.coords.longitude;
+      btn.classList.remove('loading');btn.textContent='✓';
+      btn.style.borderColor='#22c55e';btn.style.color='#22c55e';
       fetch('https://nominatim.openstreetmap.org/reverse?lat='+gpsLat+'&lon='+gpsLng+'&format=json',{headers:{'Accept-Language':'de-DE'}})
         .then(function(r){return r.json()})
-        .then(function(d){
-          var city=d.address.city||d.address.town||d.address.village||'GPS Konum';
-          document.getElementById('city').value=city+' (GPS)';
-        }).catch(function(){
-          document.getElementById('city').value='GPS: '+gpsLat.toFixed(4)+', '+gpsLng.toFixed(4);
-        });
-      // auto search
+        .then(function(d){document.getElementById('city').value=(d.address.city||d.address.town||d.address.village||'GPS')+' (GPS)';})
+        .catch(function(){});
       doSearchWithCoords(gpsLat,gpsLng);
     },
     function(err){
-      btn.classList.remove('loading');
-      btn.textContent='&#128205;';
-      var msg='GPS hatasi';
-      if(err.code===1)msg='Konum izni reddedildi. Tarayici ayarlarindan izin ver.';
-      else if(err.code===2)msg='Konum alinamadi.';
-      else if(err.code===3)msg='GPS zaman asimi.';
-      alert(msg);
+      btn.classList.remove('loading');btn.textContent='📍';
+      var m='GPS hatasi';
+      if(err.code===1)m='Konum izni reddedildi.';
+      else if(err.code===2)m='Konum alinamadi.';
+      else if(err.code===3)m='Zaman asimi.';
+      alert(m);
     },
     {timeout:10000,enableHighAccuracy:true}
   );
@@ -214,32 +269,21 @@ function srt(t,el){
   sortM=t;
   document.querySelectorAll('.chip[data-sort]').forEach(function(b){b.classList.remove('active')});
   el.classList.add('active');
-  if(sts.length)render();
+  if(sts.length){renderList();rebuildMap();}
 }
 function togOpen(){
   onlyOpen=!onlyOpen;
   var b=document.getElementById('obtn');
   b.classList.toggle('active',onlyOpen);
-  b.textContent=onlyOpen?'Sadece Acik':'Hepsi';
-  if(sts.length)render();
-}
-function togMap(){
-  mapOn=!mapOn;
-  document.getElementById('mapwrap').classList.toggle('on',mapOn);
-  var b=document.getElementById('mbtn');
-  b.classList.toggle('active',mapOn);
-  b.textContent=mapOn?'Haritayi Gizle':'Harita';
-  if(mapOn&&sts.length)setTimeout(buildMap,150);
+  b.textContent=onlyOpen?'✓ Sadece Acik':'Hepsi';
+  if(sts.length){renderList();rebuildMap();}
 }
 
 function doSearch(){
-  if(gpsLat&&gpsLng&&document.getElementById('city').value.indexOf('GPS')!==-1){
-    doSearchWithCoords(gpsLat,gpsLng);return;
-  }
+  if(gpsLat&&gpsLng&&document.getElementById('city').value.indexOf('GPS')!==-1){doSearchWithCoords(gpsLat,gpsLng);return;}
   var city=document.getElementById('city').value.replace(' (GPS)','').trim();
   if(!city)return;
-  setLoad(true,'Konum aranıyor...');
-  clearUI();
+  setLoad(true,'Konum araniyor...');clearUI();
   fetch('https://nominatim.openstreetmap.org/search?q='+encodeURIComponent(city+', Germany')+'&format=json&limit=1&countrycodes=de',
     {headers:{'Accept-Language':'de-DE','User-Agent':'TankPreisApp/1.0'}})
     .then(function(r){return r.json()})
@@ -247,172 +291,223 @@ function doSearch(){
       if(!gd.length)throw new Error('Sehir/PLZ bulunamadi: '+city);
       doSearchWithCoords(parseFloat(gd[0].lat),parseFloat(gd[0].lon));
     })
-    .catch(function(e){setLoad(false);showErr(e.message)});
+    .catch(function(e){setLoad(false);showErr(e.message);});
 }
 
 function doSearchWithCoords(lat,lng){
   var rad=document.getElementById('rad').value;
-  setLoad(true,'Tum yakit fiyatlari yukleniyor...');
-  clearUI();
-  // Fetch all 3 fuel types at once
+  setLoad(true,'Fiyatlar yukleniyor...');clearUI();
   var base='https://creativecommons.tankerkoenig.de/json/list.php?lat='+lat+'&lng='+lng+'&rad='+rad+'&sort=price&apikey='+KEY;
   Promise.all([
     fetch(base+'&type=diesel').then(function(r){return r.json()}),
     fetch(base+'&type=e5').then(function(r){return r.json()}),
     fetch(base+'&type=e10').then(function(r){return r.json()})
-  ]).then(function(results){
-    var dData=results[0], eData=results[1], e10Data=results[2];
-    if(!dData.ok&&!eData.ok&&!e10Data.ok)throw new Error('API hatasi');
-    // Build merged station map by id
+  ]).then(function(res){
+    if(!res[0].ok&&!res[1].ok&&!res[2].ok)throw new Error('API hatasi');
     var map={};
-    (dData.stations||[]).forEach(function(s){
-      map[s.id]=Object.assign({},s);
-      map[s.id].diesel=s.price;
-    });
-    (eData.stations||[]).forEach(function(s){
-      if(!map[s.id])map[s.id]=Object.assign({},s);
-      map[s.id].e5=s.price;
-      if(!map[s.id].diesel)map[s.id].diesel=null;
-    });
-    (e10Data.stations||[]).forEach(function(s){
-      if(!map[s.id])map[s.id]=Object.assign({},s);
-      map[s.id].e10=s.price;
-    });
+    (res[0].stations||[]).forEach(function(s){map[s.id]=Object.assign({},s);map[s.id].diesel=s.price;});
+    (res[1].stations||[]).forEach(function(s){if(!map[s.id])map[s.id]=Object.assign({},s);map[s.id].e5=s.price;});
+    (res[2].stations||[]).forEach(function(s){if(!map[s.id])map[s.id]=Object.assign({},s);map[s.id].e10=s.price;});
     sts=Object.values(map);
     setLoad(false);
     if(!sts.length){document.getElementById('emp').classList.add('on');return;}
-    document.getElementById('rarea').style.display='block';
-    document.getElementById('lupd').textContent='Guncelleme: '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
-    render();
-    if(mapOn)buildMap();
-  }).catch(function(e){setLoad(false);showErr(e.message)});
+    document.getElementById('main-area').style.display='block';
+    document.getElementById('lupd').textContent='Son guncelleme: '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+    renderList();
+    buildMap(lat,lng);
+    switchView(curView);
+  }).catch(function(e){setLoad(false);showErr(e.message);});
 }
 
-function gp(s){
-  var v=s[fuel];
-  if(v&&v>0)return v;
-  return null;
-}
+function gp(s){var v=s[fuel];return(v&&v>0)?v:null;}
 
-function render(){
-  var list=document.getElementById('rlist');list.innerHTML='';
+function getSorted(){
   var arr=sts.slice();
   if(onlyOpen)arr=arr.filter(function(s){return s.isOpen});
   if(sortM==='smart'){
-    arr.sort(function(a,b){
-      if(a.isOpen!==b.isOpen)return a.isOpen?-1:1;
-      return(gp(a)||9999)-(gp(b)||9999);
-    });
+    arr.sort(function(a,b){if(a.isOpen!==b.isOpen)return a.isOpen?-1:1;return(gp(a)||9999)-(gp(b)||9999);});
   }else if(sortM==='price'){
-    arr.sort(function(a,b){return(gp(a)||9999)-(gp(b)||9999)});
+    arr.sort(function(a,b){return(gp(a)||9999)-(gp(b)||9999);});
   }else{
-    arr.sort(function(a,b){
-      if(a.isOpen!==b.isOpen)return a.isOpen?-1:1;
-      return(a.dist||0)-(b.dist||0);
-    });
+    arr.sort(function(a,b){if(a.isOpen!==b.isOpen)return a.isOpen?-1:1;return(a.dist||0)-(b.dist||0);});
   }
   var lim=parseInt(document.getElementById('lim').value);
-  var shown=arr.slice(0,lim);
-  document.getElementById('cnt').textContent=shown.length;
-  document.getElementById('clbl').textContent=onlyOpen?'acik Tankstelle':'Tankstelle';
-  var openPs=shown.filter(function(s){return s.isOpen}).map(gp).filter(function(p){return p});
-  var minP=openPs.length?Math.min.apply(null,openPs):null;
-  var cheapDone=false;
-  var fc=fuel==='diesel'?'var(--diesel)':fuel==='e5'?'var(--super)':'var(--e10)';
+  return arr.slice(0,lim);
+}
 
+function getMinP(shown){
+  var ps=shown.filter(function(s){return s.isOpen}).map(gp).filter(function(p){return p});
+  return ps.length?Math.min.apply(null,ps):null;
+}
+
+function fmtPrice(price){
+  if(!price)return null;
+  var s=price.toFixed(3);var dot=s.indexOf('.');
+  return s.slice(0,dot)+','+s[dot+1]+s[dot+2]+'<span class="psup">'+s[dot+3]+'</span>';
+}
+function fmtPricePlain(price){
+  if(!price)return '?';
+  var s=price.toFixed(3);var dot=s.indexOf('.');
+  return s.slice(0,dot)+','+s.slice(dot+1);
+}
+
+function colorClass(){return fuel==='diesel'?'diesel-c':fuel==='e5'?'e5-c':'e10-c';}
+function fuelLbl(){return fuel==='diesel'?'Diesel':fuel==='e5'?'Super E5':'Super E10';}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* ---- LIST VIEW ---- */
+function renderList(){
+  var shown=getSorted();
+  var minP=getMinP(shown);
+  var cc=colorClass();
+  document.getElementById('cnt').textContent=shown.length;
+  document.getElementById('clbl').textContent=onlyOpen?'acik istasyon':'istasyon';
+  var list=document.getElementById('rlist');list.innerHTML='';
+  var cheapDone=false;
   shown.forEach(function(st,i){
     var price=gp(st);
     var isCheap=!cheapDone&&price&&price===minP&&st.isOpen;
     if(isCheap)cheapDone=true;
     var diff=(price&&minP&&price>minP)?'+'+((price-minP)*100).toFixed(1)+'ct':null;
     var others='';
-    if(fuel!=='diesel'&&st.diesel&&st.diesel>0)others+='<div class="opi">Diesel: <b>'+st.diesel.toFixed(3)+' EUR</b></div>';
-    if(fuel!=='e5'&&st.e5&&st.e5>0)others+='<div class="opi">E5: <b>'+st.e5.toFixed(3)+' EUR</b></div>';
-    if(fuel!=='e10'&&st.e10&&st.e10>0)others+='<div class="opi">E10: <b>'+st.e10.toFixed(3)+' EUR</b></div>';
+    if(fuel!=='diesel'&&st.diesel>0)others+='<div class="opi">Diesel: <b>'+st.diesel.toFixed(3)+'</b></div>';
+    if(fuel!=='e5'&&st.e5>0)others+='<div class="opi">E5: <b>'+st.e5.toFixed(3)+'</b></div>';
+    if(fuel!=='e10'&&st.e10>0)others+='<div class="opi">E10: <b>'+st.e10.toFixed(3)+'</b></div>';
     var card=document.createElement('div');
     card.className='scard'+(isCheap?' cheap':'')+(!st.isOpen?' closed':'');
-    card.style.animationDelay=Math.min(i*0.035,0.4)+'s';
-    var priceHtml;
-    if(price){
-      var s=price.toFixed(3);
-      var dot=s.indexOf('.');var eu=s.slice(0,dot);var dc=s.slice(dot+1);
-      priceHtml=eu+','+dc[0]+dc[1]+'<span class="psup">'+dc[2]+'</span>';
-    }else{
-      priceHtml='<span style="font-size:14px;color:var(--muted)">N/A</span>';
-    }
+    card.style.animationDelay=Math.min(i*0.03,0.35)+'s';
+    card.onclick=function(){switchView('map');setTimeout(function(){focusMarker(st.id);},200);};
     card.innerHTML=
       '<div>'+
         '<div class="stop">'+
           '<span class="sbrand">'+esc(st.brand||'Unbekannt')+'</span>'+
-          (isCheap?'<span class="bdg bchp">En Ucuz</span>':'')+
-          (st.isOpen?'<span class="bdg bopen">Acik</span>':'<span class="bdg bclosed">Kapali</span>')+
+          (isCheap?'<span class="bdg bchp">&#11088; En Ucuz</span>':'')+
+          (st.isOpen?'<span class="bdg bopen">&#9679; Acik</span>':'<span class="bdg bclosed">&#9679; Kapali</span>')+
         '</div>'+
-        '<div class="sadr">'+esc((st.street||'')+' '+(st.houseNumber||'')+', '+(st.postCode||'')+' '+(st.place||''))+'</div>'+
-        '<div class="smeta"><span class="mitem">'+(st.dist?st.dist.toFixed(1)+' km':'?')+'</span></div>'+
+        '<div class="sadr">&#128205; '+esc((st.street||'')+' '+(st.houseNumber||'')+', '+(st.postCode||'')+' '+(st.place||''))+'</div>'+
+        '<div class="smeta"><span class="mitem">'+(st.dist?st.dist.toFixed(1)+' km':'–')+'</span></div>'+
         (others?'<div class="opr">'+others+'</div>':'')+
       '</div>'+
       '<div class="pblock">'+
-        '<div class="pmain" style="color:'+(price?fc:'var(--muted)')+'">'+priceHtml+'</div>'+
-        '<div class="punit">'+(fuel==='diesel'?'Diesel':fuel==='e5'?'Super E5':'Super E10')+' / L</div>'+
+        '<div class="pmain '+cc+'">'+(fmtPrice(price)||'<span style="font-size:13px;color:#c0cce0">N/A</span>')+'</div>'+
+        '<div class="punit">'+fuelLbl()+' / L</div>'+
         (diff?'<div class="pdiff hi">'+diff+'</div>':(isCheap?'<div class="pdiff lo">En Ucuz</div>':''))+
       '</div>';
     list.appendChild(card);
   });
 }
 
-function buildMap(){
+/* ---- MAP VIEW ---- */
+var markerMap={};
+
+function buildMap(clat,clng){
   if(!mapInst){
-    mapInst=L.map('map');
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© OSM © CartoDB',maxZoom:18}).addTo(mapInst);
+    mapInst=L.map('map',{zoomControl:true});
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+      attribution:'© OpenStreetMap © CartoDB',maxZoom:18
+    }).addTo(mapInst);
   }
-  markers.forEach(function(m){mapInst.removeLayer(m)});markers=[];
-  var valid=sts.filter(function(s){return s.lat&&s.lng});
-  if(!valid.length){return;}
-  var ops=valid.filter(function(s){return s.isOpen}).map(gp).filter(function(p){return p});
-  var minP=ops.length?Math.min.apply(null,ops):null;
-  valid.forEach(function(st){
-    var price=gp(st);
-    var cheap=price&&price===minP&&st.isOpen;
-    var bg=cheap?'#f0a500':st.isOpen?'#3b82f6':'#555';
-    var fg=cheap?'#000':'#fff';
-    var lbl=price?price.toFixed(3):'?';
-    var icon=L.divIcon({
-      className:'',
-      html:'<div style="background:'+bg+';color:'+fg+';padding:4px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.2);">'+lbl+'</div>',
-      iconAnchor:[28,14]
-    });
-    var m=L.marker([st.lat,st.lng],{icon:icon}).addTo(mapInst);
-    m.bindPopup('<b>'+esc(st.brand)+'</b><br>'+esc(st.street||'')+' '+esc(st.houseNumber||'')+'<br>'+(price?'<b>'+price.toFixed(3)+' EUR</b>':'Fiyat yok')+'<br>'+(st.isOpen?'Acik':'Kapali')+'<br>'+(st.dist?st.dist.toFixed(1)+' km':''));
-    markers.push(m);
-  });
-  if(gpsLat&&gpsLng){
-    var myIcon=L.divIcon({className:'',html:'<div style="background:#f0a500;width:14px;height:14px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 8px rgba(240,165,0,.8)"></div>',iconAnchor:[7,7]});
-    var myM=L.marker([gpsLat,gpsLng],{icon:myIcon}).addTo(mapInst);
-    myM.bindPopup('<b>Senin Konumun</b>');
-    markers.push(myM);
-  }
-  var grp=L.featureGroup(markers);
-  mapInst.fitBounds(grp.getBounds().pad(0.15));
-  mapInst.invalidateSize();
+  rebuildMap();
+  // center on search location
+  if(clat&&clng)mapInst.setView([clat,clng],13);
 }
 
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function clearUI(){
-  document.getElementById('rarea').style.display='none';
-  document.getElementById('emp').classList.remove('on');
-  document.getElementById('err').classList.remove('on');
+function rebuildMap(){
+  if(!mapInst)return;
+  markers.forEach(function(m){mapInst.removeLayer(m)});
+  markers=[];markerMap={};
+  var shown=getSorted();
+  var minP=getMinP(shown);
+  var shownIds={};shown.forEach(function(s){shownIds[s.id]=true;});
+  // also show closed if onlyOpen=false
+  var toShow=onlyOpen?shown:sts.filter(function(s){return s.lat&&s.lng});
+
+  document.getElementById('cnt').textContent=shown.length;
+  document.getElementById('clbl').textContent=onlyOpen?'acik istasyon':'istasyon';
+
+  toShow.forEach(function(st){
+    if(!st.lat||!st.lng)return;
+    var price=gp(st);
+    var isCheap=price&&price===minP&&st.isOpen;
+    var isOpen=st.isOpen;
+
+    // Marker color
+    var bg=isCheap?'#ff8c00':isOpen?'#1e4fd8':'#9ca3af';
+    var fg='#fff';
+    var border=isCheap?'3px solid #fff':'2px solid rgba(255,255,255,.6)';
+    var shadow=isCheap?'0 3px 12px rgba(255,140,0,.6)':'0 2px 8px rgba(0,0,0,.35)';
+    var priceStr=price?fmtPricePlain(price):'?';
+    var size=isCheap?'13px':'11px';
+    var fw=isCheap?'800':'600';
+
+    var icon=L.divIcon({
+      className:'',
+      html:'<div style="background:'+bg+';color:'+fg+';padding:8px 14px;border-radius:24px;font-size:'+size+';font-weight:'+fw+';font-family:\'Syne\',sans-serif;white-space:nowrap;box-shadow:'+shadow+';border:'+border+';letter-spacing:-0.2px;'+(isCheap?'transform:scale(1.15);':'')+(!isOpen?'opacity:.5;':'')+'">'+priceStr+'</div>',
+      iconAnchor:[36,20]
+    });
+
+    // Popup content
+    var cc=colorClass();
+    var others='';
+    if(fuel!=='diesel'&&st.diesel>0)others+='Diesel: <b>'+st.diesel.toFixed(3)+'</b>&nbsp;&nbsp;';
+    if(fuel!=='e5'&&st.e5>0)others+='E5: <b>'+st.e5.toFixed(3)+'</b>&nbsp;&nbsp;';
+    if(fuel!=='e10'&&st.e10>0)others+='E10: <b>'+st.e10.toFixed(3)+'</b>';
+
+    var popHtml=
+      '<div class="lpop">'+
+        '<div class="lpop-brand">'+esc(st.brand||'Unbekannt')+'</div>'+
+        '<div class="lpop-price '+cc+'">'+(price?fmtPricePlain(price)+' €':'N/A')+'</div>'+
+        '<div class="lpop-adr">'+esc((st.street||'')+' '+(st.houseNumber||'')+', '+(st.postCode||'')+' '+(st.place||''))+'</div>'+
+        '<div class="lpop-meta">'+
+          (isOpen?'<span class="lpop-tag lpop-open">&#9679; Acik</span>':'<span class="lpop-tag lpop-closed">&#9679; Kapali</span>')+
+          (st.dist?'<span class="lpop-tag lpop-dist">'+st.dist.toFixed(1)+' km</span>':'')+
+          (isCheap?'<span class="lpop-tag" style="background:linear-gradient(135deg,#ff8c00,#ff4500);color:#fff;border:none">&#11088; En Ucuz</span>':'')+
+        '</div>'+
+        (others?'<div class="lpop-others">'+others+'</div>':'')+
+        '<a href="https://www.google.com/maps/dir/?api=1&destination='+st.lat+','+st.lng+'&travelmode=driving" target="_blank" style="display:block;margin-top:10px;padding:9px;background:linear-gradient(135deg,#1e4fd8,#1230a0);color:#fff;border-radius:10px;text-align:center;text-decoration:none;font-family:Syne,sans-serif;font-weight:700;font-size:13px;box-shadow:0 3px 10px rgba(30,79,216,.35)">&#128663; Navigasyon</a>'+
+      '</div>';
+
+    var m=L.marker([st.lat,st.lng],{icon:icon}).addTo(mapInst);
+    m.bindPopup(popHtml,{maxWidth:220,minWidth:180});
+    markers.push(m);
+    markerMap[st.id]=m;
+  });
+
+  // My location marker
+  if(gpsLat&&gpsLng){
+    var myIcon=L.divIcon({className:'',html:'<div style="width:14px;height:14px;background:#ff8c00;border-radius:50%;border:3px solid #fff;box-shadow:0 0 12px rgba(255,140,0,.7)"></div>',iconAnchor:[7,7]});
+    var myM=L.marker([gpsLat,gpsLng],{icon:myIcon}).addTo(mapInst);
+    myM.bindPopup('<b style="font-family:Syne,sans-serif">Konumun</b>');
+    markers.push(myM);
+  }
+
+  if(markers.length){
+    var grp=L.featureGroup(markers);
+    mapInst.fitBounds(grp.getBounds().pad(0.12));
+  }
 }
+
+function focusMarker(id){
+  var m=markerMap[id];
+  if(!m)return;
+  mapInst.setView(m.getLatLng(),15);
+  m.openPopup();
+}
+
 function setLoad(v,txt){
   document.getElementById('load').classList.toggle('on',v);
   if(txt)document.getElementById('ltxt').textContent=txt;
   var b=document.getElementById('sbtn');b.disabled=v;
-  b.textContent=v?'Araniyor...':'Ara / Suchen';
+  b.innerHTML=v
+    ?'<div style="width:15px;height:15px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px"></div>Araniyor...'
+    :'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:6px"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Ara / Suchen';
 }
-function showErr(msg){
-  var el=document.getElementById('err');
-  el.innerHTML='Hata: '+esc(msg);
-  el.classList.add('on');
+function clearUI(){
+  document.getElementById('main-area').style.display='none';
+  document.getElementById('emp').classList.remove('on');
+  document.getElementById('err').classList.remove('on');
 }
+function showErr(msg){var el=document.getElementById('err');el.innerHTML='&#10060; Hata: '+esc(msg);el.classList.add('on');}
 </script>
 </body>
 </html>
